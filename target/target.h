@@ -103,6 +103,24 @@ typedef enum E_TARGET_EXTPIN
     E_TARGET_RADIO_SLPTR,    //!< E_TARGET_RADIO_SLPTR
 } en_targetExtPin_t;
 
+typedef uint32_t intStatus_t;
+
+/*----------------------------------------------------------------------------*/
+/** \brief      This function retrieves value of interrupt status register
+ *
+ *  \return        interrupt status register
+ */
+/*---------------------------------------------------------------------------*/
+intStatus_t hal_intStatusGet(void);
+
+/*----------------------------------------------------------------------------*/
+/** \brief      This function set value of interrupt status register
+ *
+ *  \param         intStatus   value to set
+ *  \return        none
+ */
+/*---------------------------------------------------------------------------*/
+void hal_intStatusSet(intStatus_t intStatus);
 
 /*----------------------------------------------------------------------------*/
 /** \brief      This function has to enter a critical section to prevent

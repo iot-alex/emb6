@@ -178,6 +178,21 @@ typedef enum E_BSP_GET_TYPE
 #define LED_ERR_OFF()               bsp_led(E_BSP_LED_4, E_BSP_LED_OFF)
 
 
+#define BSP_SR_ALLOC()              intStatus_t _intStatus
+
+
+#define BSP_CRITICAL_ENTER()  \
+  do {                                \
+    _intStatus = hal_intStatusGet();  \
+  } while (0)
+
+
+#define BSP_CRITICAL_EXIT() \
+  do {  \
+    hal_intStatusSet(_intStatus);     \
+  } while (0)
+
+
 /*==============================================================================
                          FUNCTION PROTOTYPES OF THE API
 ==============================================================================*/
