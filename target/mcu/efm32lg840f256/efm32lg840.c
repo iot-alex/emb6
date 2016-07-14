@@ -49,8 +49,9 @@
 /*! \file   efm32lg840f128/efm32lg840.c
 
     \author Manuel Schappacher manuel.schappacher@hs-offenburg.de
+            Phuong Nguyen      minh.nguyen@hs-offenburg.de
 
-    \brief  Hardware dependent initialization for EFM32LG990F256.
+    \brief  Hardware dependent initialization for EFM32LG840F256.
 
    \version 0.0.1
 */
