@@ -180,12 +180,10 @@ typedef enum E_BSP_GET_TYPE
 
 #define BSP_SR_ALLOC()              intStatus_t _intStatus
 
-
 #define BSP_CRITICAL_ENTER()  \
   do {                                \
     _intStatus = hal_intStatusGet();  \
   } while (0)
-
 
 #define BSP_CRITICAL_EXIT() \
   do {  \

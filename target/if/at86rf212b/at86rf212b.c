@@ -1305,7 +1305,9 @@ static void _rf212b_callback(c_event_t c_event, p_data_t p_data)
     packetbuf_clear();
 
     /* Turn off interrupts to avoid ISR writing to the same buffers we are reading. */
-    bsp_enterCritical();
+    BSP_SR_ALLOC();
+
+    BSP_CRITICAL_ENTER();
 
     LOG1_OK( "RX packet RSSI=[%d]; LQI=[%d]; LEN=[%d]",
              c_last_rssi,
@@ -1317,7 +1319,7 @@ static void _rf212b_callback(c_event_t c_event, p_data_t p_data)
     c_len = _rf212b_read(packetbuf_dataptr(), PACKETBUF_SIZE);
 
     /* Restore interrupts. */
-    bsp_exitCritical();
+    BSP_CRITICAL_EXIT();
 
     if((c_len > 0) && (p_phy != NULL)) {
           s_err = NETSTK_ERR_NONE;

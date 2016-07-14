@@ -691,7 +691,9 @@ static void mac_selfTest(struct s_smartMAC *p_ctx) {
   uint8_t rxBroadcast[] = {0x41, 0xdc, 0x00, 0xcd, 0xab, 0xff, 0xff, 0x21, 0x11, 0x50, 0x51, 0x52, 0x53};
 
 
-  bsp_enterCritical();
+  BSP_SR_ALLOC();
+
+  BSP_CRITICAL_ENTER();
   trace_printf("SmartMAC test: ................. started");
 
   /* TEST: initial transition */
@@ -835,7 +837,7 @@ static void mac_selfTest(struct s_smartMAC *p_ctx) {
   }
 
   trace_printf("SmartMAC test: ................. finished");
-  bsp_exitCritical();
+  BSP_CRITICAL_EXIT();
   while (1);
 }
 #endif /* SMARTMAC_CFG_SELF_TEST_EN */

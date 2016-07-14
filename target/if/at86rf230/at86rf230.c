@@ -599,12 +599,14 @@ static void _rf230_callback(c_event_t c_event, p_data_t p_data)
     packetbuf_clear();
 
     /* Turn off interrupts to avoid ISR writing to the same buffers we are reading. */
-    bsp_enterCritical();
+    BSP_SR_ALLOC();
+
+    BSP_CRITICAL_ENTER();
 
     c_len = _rf230_read(packetbuf_dataptr(), PACKETBUF_SIZE);
 
     /* Restore interrupts. */
-    bsp_exitCritical();
+    BSP_CRITICAL_EXIT();
     LOG_DBG("%u bytes lqi %u\n\r",c_len,c_last_correlation);
 
     if((c_len > 0) && (p_lmac != NULL)) {

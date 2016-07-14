@@ -1317,7 +1317,9 @@ static void _rf212_callback(c_event_t c_event, p_data_t p_data)
     packetbuf_clear();
 
     /* Turn off interrupts to avoid ISR writing to the same buffers we are reading. */
-    bsp_enterCritical();
+    BSP_SR_ALLOC();
+
+    BSP_CRITICAL_ENTER();
 
     LOG_RAW("_rf212_rxFrame: ");
     for(c_ndx = 0; c_ndx < gps_rxframe[c_rxframe_head].length; c_ndx++)
@@ -1327,7 +1329,7 @@ static void _rf212_callback(c_event_t c_event, p_data_t p_data)
     c_len = _rf212_read(packetbuf_dataptr(), PACKETBUF_SIZE);
 
     /* Restore interrupts. */
-    bsp_exitCritical();
+    BSP_CRITICAL_EXIT();
     LOG_DBG("%u bytes lqi %u",c_len,c_last_correlation);
 
     if((c_len > 0) && (p_phy != NULL)) {

@@ -334,13 +334,15 @@ en_evprocResCode_t evproc_putEvent(        en_evprocAction_t     e_actType, \
                                         p_data_t             p_data)
 {
     int8_t i;
-    bsp_enterCritical();
+    BSP_SR_ALLOC();
+
+    BSP_CRITICAL_ENTER();
     switch (e_actType)
     {
         case  E_EVPROC_HEAD:
             if (c_queueSize == EVPROC_QUEUE_SIZE) {
             //    printf("Not enogh space in a queue\n\r");
-                bsp_exitCritical();
+                BSP_CRITICAL_EXIT();
                 return E_END_OF_LIST;
             }
             if ((c_eventType < OBLIG_EVENT_PRIOR) && (_evproc_lookupEvent(c_eventType,p_data))) {
@@ -352,12 +354,12 @@ en_evprocResCode_t evproc_putEvent(        en_evprocAction_t     e_actType, \
                 pst_evList[c_queueSize].p_data = p_data;
                 c_queueSize++;
             }
-            bsp_exitCritical();
+            BSP_CRITICAL_EXIT();
             break;
         case  E_EVPROC_TAIL:
             if (c_queueSize == EVPROC_QUEUE_SIZE) {
             //    printf("Not enough space in a queue\n\r");
-                bsp_exitCritical();
+                BSP_CRITICAL_EXIT();
                 return E_END_OF_LIST;
             }
             if ((c_eventType < OBLIG_EVENT_PRIOR) && (_evproc_lookupEvent(c_eventType,p_data))) {
@@ -375,18 +377,18 @@ en_evprocResCode_t evproc_putEvent(        en_evprocAction_t     e_actType, \
                 pst_evList[0].p_data = p_data;
                 c_queueSize++;
             }
-            bsp_exitCritical();
+            BSP_CRITICAL_EXIT();
             break;
         case  E_EVPROC_EXEC:
             LOG_INFO("Execute event %d\n\r",c_eventType);
-            bsp_exitCritical();
+            BSP_CRITICAL_EXIT();
             if (!_evproc_pushEvent(c_eventType,p_data)) {
                 return E_UNKNOWN_TYPE;
             }
             break;
         default:
             LOG_INFO("%s","Not known\n\r");
-            bsp_exitCritical();
+            BSP_CRITICAL_EXIT();
             return E_UNKNOWN_TYPE;
     }
     return E_SUCCESS;
@@ -402,8 +404,9 @@ en_evprocResCode_t evproc_nextEvent(void)
     uint8_t i;
 
     if (c_queueSize > 0) {
-        bsp_enterCritical();
+        BSP_SR_ALLOC();
 
+        BSP_CRITICAL_ENTER();
         LOG_INFO("%s\n\r", "Event queue");
         for (i = 0; i < c_queueSize; i++) {
             LOG_RAW("%d | ev = %d : %p\n\r", i, pst_evList[i].c_event, pst_evList[i].p_data);
@@ -415,7 +418,7 @@ en_evprocResCode_t evproc_nextEvent(void)
         pst_evList[c_queueSize - 1].p_data = NULL;
         c_queueSize--;
 
-        bsp_exitCritical();
+        BSP_CRITICAL_EXIT();
         if (!_evproc_pushEvent(nextEvent.c_event, nextEvent.p_data)) {
             return E_UNKNOWN_TYPE;
         }

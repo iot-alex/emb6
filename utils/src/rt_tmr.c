@@ -195,7 +195,9 @@ void rt_tmr_create(s_rt_tmr_t *p_tmr, e_rt_tmr_type_t type, rt_tmr_tick_t period
  */
 void rt_tmr_start(s_rt_tmr_t *p_tmr)
 {
-  bsp_enterCritical();
+  BSP_SR_ALLOC();
+
+  BSP_CRITICAL_ENTER();
   if ((p_tmr->state == E_RT_TMR_STATE_CREATED) ||
       (p_tmr->state == E_RT_TMR_STATE_STOPPED)) {
     /* update new counter */
@@ -207,7 +209,7 @@ void rt_tmr_start(s_rt_tmr_t *p_tmr)
     /* change timer state to RUNNING */
     p_tmr->state = E_RT_TMR_STATE_RUNNING;
   }
-  bsp_exitCritical();
+  BSP_CRITICAL_EXIT();
 }
 
 /**
@@ -218,13 +220,15 @@ void rt_tmr_start(s_rt_tmr_t *p_tmr)
  */
 void rt_tmr_stop(s_rt_tmr_t *p_tmr)
 {
-  bsp_enterCritical();
+  BSP_SR_ALLOC();
+
+  BSP_CRITICAL_ENTER();
   if (p_tmr->state == E_RT_TMR_STATE_RUNNING) {
     /* timer is running and linked in timer list, then first have it unlinked */
     rt_tmr_unlink(p_tmr);
   }
   p_tmr->state = E_RT_TMR_STATE_STOPPED;
-  bsp_exitCritical();
+  BSP_CRITICAL_EXIT();
 }
 
 /**
